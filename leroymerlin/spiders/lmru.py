@@ -62,5 +62,3 @@ class LmruSpider(scrapy.Spider):
         #                       spec_keys=spec_keys,
         #                       spec_vals=spec_vals,
         #                       photos=photos)
-
-
