@@ -19,11 +19,11 @@ class DataBasePipeline:
 
 
     def process_item(self, item, spider):
-        item['price'] = item['price'].replace(' ', '')
-        item['spec_vals'] = [key.replace('\n', '').strip() for key in item['spec_vals']]
-        item['specifications'] = dict(zip(item['spec_keys'], item['spec_vals']))
-        del item['spec_keys']
-        del item['spec_vals']
+        # item['price'] = item['price'].replace(' ', '')
+        # item['spec_vals'] = [key.replace('\n', '').strip() for key in item['spec_vals']]
+        # item['specifications'] = dict(zip(item['spec_keys'], item['spec_vals']))
+        # del item['spec_keys']
+        # del item['spec_vals']
         collection = self.mongo_base[spider.name]
         collection.insert_one(item)
         return item

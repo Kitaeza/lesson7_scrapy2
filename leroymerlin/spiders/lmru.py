@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.http import HtmlResponse
 from leroymerlin.items import LeroymerlinItem
+from scrapy.loader import ItemLoader
 
 class LmruSpider(scrapy.Spider):
     name = 'lmru'
@@ -35,21 +36,31 @@ class LmruSpider(scrapy.Spider):
 
 
     def parse_unit(self, response:HtmlResponse):
-        href = response.url
-        title = response.xpath("//h1/text()").extract_first()
-        price = response.xpath("//span[@slot='price']/text()").extract_first()
-        currency = response.xpath("//span[@slot='currency']/text()").extract_first()
-        unit = response.xpath("//span[@slot='unit']/text()").extract_first()
-        spec_keys = response.xpath("//dl/div/dt/text()").extract()
-        spec_vals = response.xpath("//dl/div/dd/text()").extract()
-        photos = response.xpath("//uc-pdp-media-carousel/picture/img/@src").extract()
-        yield LeroymerlinItem(href=href,
-                              title=title,
-                              price=price,
-                              currency=currency,
-                              unit=unit,
-                              spec_keys=spec_keys,
-                              spec_vals=spec_vals,
-                              photos=photos)
+        loader = ItemLoader(item=LeroymerlinItem(), response=response)
+        loader.add_value('href', response.url)
+        loader.add_xpath('title', "//h1/text()")
+        loader.add_xpath('price', "//span[@slot='price']/text()")
+        loader.add_xpath('currency', "//span[@slot='currency']/text()")
+        loader.add_xpath('unit', "//span[@slot='unit']/text()")
+        loader.add_xpath('spec_keys', "//dl/div/dt/text()")
+        loader.add_xpath('spec_vals', "//dl/div/dd/text()")
+        loader.add_xpath('photos', "//uc-pdp-media-carousel/picture/img/@src")
+        yield loader.load_item()
+        # href = response.url
+        # title = response.xpath("//h1/text()").extract_first()
+        # price = response.xpath("//span[@slot='price']/text()").extract_first()
+        # currency = response.xpath("//span[@slot='currency']/text()").extract_first()
+        # unit = response.xpath("//span[@slot='unit']/text()").extract_first()
+        # spec_keys = response.xpath("//dl/div/dt/text()").extract()
+        # spec_vals = response.xpath("//dl/div/dd/text()").extract()
+        # photos = response.xpath("//uc-pdp-media-carousel/picture/img/@src").extract()
+        # yield LeroymerlinItem(href=href,
+        #                       title=title,
+        #                       price=price,
+        #                       currency=currency,
+        #                       unit=unit,
+        #                       spec_keys=spec_keys,
+        #                       spec_vals=spec_vals,
+        #                       photos=photos)
 
 
